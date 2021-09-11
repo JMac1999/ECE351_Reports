@@ -1,0 +1,395 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                              %
+% Jared McDaniel                                               %
+% ECE 351 Section 51                                           %
+% Lab 2                                                        %
+% 9/14/2021                                                    %
+% This file contains the contents of the Lab 2 Report          %
+%                                                              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\documentclass[12pt]{report}
+\usepackage[english]{babel}
+%\usepackage{natbib}
+\usepackage{url}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\graphicspath{{images/}}
+\usepackage{parskip}
+\usepackage{fancyhdr}
+\usepackage{vmargin}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codeblue}{rgb}{0,0,0.95}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{codeblue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codegreen},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+ 
+\lstset{style=mystyle}
+
+\setmarginsrb{3 cm}{2.5 cm}{3 cm}{2.5 cm}{1 cm}{1.5 cm}{1 cm}{1.5 cm}
+
+\title{Lab 2}								
+% Title
+\author{ Jared McDaniel}						
+% Author
+\date{9/14/2021}
+% Date
+
+\makeatletter
+\let\thetitle\@title
+\let\theauthor\@author
+\let\thedate\@date
+\makeatother
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\theauthor}
+\lhead{\thetitle}
+\cfoot{\thepage}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{titlepage}
+	\centering
+    \vspace*{0.5 cm}
+   % \includegraphics[scale = 0.075]{bsulogo.png}\\[1.0 cm]	% University Logo
+\begin{center}    \textsc{\Large   ECE 351 - Section 51 }\\[2.0 cm]	\end{center}% University Name
+	\textsc{\Large User-Defined Functions  }\\[0.5 cm]				% Course Code
+	\rule{\linewidth}{0.2 mm} \\[0.4 cm]
+	{ \huge \bfseries \thetitle}\\
+	\rule{\linewidth}{0.2 mm} \\[1.5 cm]
+	
+	\begin{minipage}{0.4\textwidth}
+		\begin{flushleft} \large
+		%	\emph{Submitted To:}\\
+		%	Name\\
+          % Affiliation\\
+           %contact info\\
+			\end{flushleft}
+			\end{minipage}~
+			\begin{minipage}{0.4\textwidth}
+            
+			\begin{flushright} \large
+			\emph{Submitted By :} \\
+			Jared McDaniel  
+		\end{flushright}
+           
+	\end{minipage}\\[2 cm]
+	
+%	\includegraphics[scale = 0.5]{PICMathLogo.png}
+    
+    
+    
+    
+	
+\end{titlepage}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\tableofcontents
+\pagebreak
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\thesection}{\arabic{section}}
+\section{Introduction}
+ 
+
+The goal of this lab is to introduce and utilize user-defined functions to demonstrate time shifting, time reversal, signal addition, and discrete differentiation for signal operations. In order to do this properly, we will use Python's \textbf{for} loops and \textbf{if/else} statements. Python's \textbf{for} loops will be used in conjunction with Python's \textbf{len()} function. This will return the number of elements in the array starting at 0. Plots will also be implemented and identified with a title, x-axis label, and y-axis label. If a subplot is utilized, the x-axis label will only be used on the bottom plot. The final Python function we will utilize is the \textbf{range()} along with \textbf{numpy.arange()}. The \textbf{range()} function receives a single argument and and generates a list of values with step sizes of 1. The \textbf{numpy.arange()} function receives three arguments (starting value, ending value, and the step size). 
+
+\section{Equations}
+
+The equations below portray the ones that were used during this lab. All of the equations are shown in the Results section as plots. The first four equations will correspond with the first five figures portrayed in the Results section. Equations 5 and 6 will correspond with the sixth plot, and equations 7 and 8 will correspond with the seventh plot.
+\begin{equation}
+    y = cos(t)
+\end{equation}
+\begin{equation}
+    f(t) = r(t) - r(t-3) + 5\cdot u(t-3) - 2\cdot u(t-6) - 2\cdot r(t-6)
+\end{equation}
+\begin{equation}
+    f(t) = r(t)
+\end{equation}
+\begin{equation}
+    f(t) = u(t)
+\end{equation}
+\begin{equation}
+    f(t-4)
+\end{equation}
+\begin{equation}
+    f(-t-4)
+\end{equation}
+\begin{equation}
+    f(t/2)
+\end{equation}
+\begin{equation}
+    f(2\cdot t)
+\end{equation}
+
+\section{Methodology}
+
+In order to fully understand this lab, I started by first going over the example code that was given to us. Once I understood everything in the example code, I was able to move on to part 1 of the lab. Part 1 tasked us with creating a cosine function with good resolution. I started this by copying the first twenty lines of the example code onto my .py file. Then I began creating my user-defined function. I used a for loop, implemented my cosine function, and returned the output to be stored in the array. Then I called the function and used the plt.plot functions to create my plot. 
+\begin{lstlisting}[language=Python]
+#%% Part 1 Code
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+plt.rcParams.update({ 'font.size' :14}) #font size on plots
+
+steps = 1e-2 #step size
+t = np.arange(0, 10 + steps, steps) 
+#plot starts at zero and finishes at 10 on the x-axis
+
+print('Number of elements:  len(t) =', len(t), '\nFirst Element: t[0] =', t[0],
+  '\nLast Element: t[len(t) - 1] = ', t[len(t) - 1])
+
+def f(t): #user defined function
+    y=np.zeros(t.shape) #y(t) is initialized as an array of zeros
+    
+    for i in range(len(t)): #loop will be ran once
+        y[i] = np.cos(t[i]) #implemented cosine function
+    return y #returns output stored in the array
+
+y = f(t) #call my created function
+
+plt.figure(figsize = (10,7))
+plt.plot(t, y)
+plt.grid()
+plt.ylabel('y(t) with Good Resolution')
+plt.xlabel('t')
+plt.title('Part 1 Plot')
+\end{lstlisting}
+
+{This is my code for part 2 of lab 2. For this section of the lab, we were tasked with deriving our own function for the plot given to us. The equation I derived can be viewed as Equation (3) under the Equations section of this lab report. My code for part 2 includes a definition of the step function and the ramp function that we learned in class. From those definitions, I was able to create a function that would replicate the plot given to us in the lab handout.  }
+\begin{lstlisting}[language=Python]
+#%% Part 2 Code
+
+t = np.arange(-5, 10 + steps, steps) 
+#plot starts at -5 and finishes at 10 on the x-axis
+
+#user defined functions
+
+def u(t): #step function
+    y=np.zeros(t.shape) #y(t) is initialized as an array of zeros
+    
+    for i in range(len(t)):
+        if(t[i]<0):
+            y[i]=0 #step function is 0 when t < 0
+        else:
+            y[i]=1 #step function is 1 when t >= 0
+    return y #return outputs stored in the array
+
+def r(t): #ramp function
+    y=np.zeros(t.shape) #y(t) is initialized as an array of zeros
+    
+    for i in range(len(t)):
+        if(t[i]<0):
+            y[i]=0 #ramp function is 0 when t < 0
+        else:
+            y[i] = t[i] #ramp function equals t when t >= 0
+    return y #return outputs stored in the array
+
+y = r(t) - r(t-3) + 5*u(t-3) - 2*u(t-6) - 2*r(t-6)
+
+plt.figure(figsize = (10,7))
+plt.plot(t, y)
+plt.grid()
+plt.ylabel('y(t)')
+plt.xlabel('t')
+plt.title('Part 2 Plot')
+\end{lstlisting}
+
+{This is my code for part 3 task 1 of lab 2. For this section of the lab we were tasked with creating a time reversal plot for the function we created in part 2 of the lab. To do this, I began by returning my created function. Once that was completed, I changed my second plt.plot function to portray f1(-t) instead of y. This small change caused my plot to be a mirror image of the plot created in part 2.}
+\begin{lstlisting}[language=Python]
+#%% Part 3 Task 1 Code
+
+t = np.arange(-10, 5 + steps, steps) 
+#plot starts at -10 and finishes at 5 on the x-axis
+
+def f1(t): return r(t) - r(t-3) + 5*u(t-3) - 2*u(t-6) - 2*r(t-6)
+#returns created ramp and step function equation from Part 2
+
+plt.figure(figsize = (10,7))
+plt.plot(t, f1(-t)) #plots the original created equation just flipped
+plt.grid()
+plt.ylabel('y(t)')
+plt.xlabel('t')
+plt.title('Part 3 Time Reversal Plot'
+\end{lstlisting}
+
+{This is my code for part 3 task 2 of lab 2. In this section of the lab we were tasked with applying time-shift operations to our plot from part 2 of the lab. To do this, I began by adding two more plt.plot functions to my code. Inside the functions I inserted equations 4 and 5 into my f1(t) function. I also added the original plot for reference. }
+\begin{lstlisting}[language=Python]
+#%% Part 3 Task 2 Code
+
+t = np.arange(-15, 15 + steps, steps) 
+#plot starts at -15 and finishes at 15 on the x-axis
+
+plt.figure(figsize = (10,7))
+plt.plot(t, f1(t),label = 'f1(t)') #plots the original created equation
+plt.plot(t, f1(t-4),label = 'f1(t-4') #plots original equation shifted 4 units to the right
+plt.plot(t, f1(-t-4),label = 'f1(-t-4)') #flips plot and shifts 4 units to the left
+plt.legend() #need this for labels to show up
+plt.grid()
+plt.ylabel('y(t)')
+plt.xlabel('t')
+plt.title('Part 3 Time-Shift Plot')
+\end{lstlisting}
+
+{This is my code for part 3 task 3 of lab 2. In this section of the lab we were tasked with applying time scale operations to our plot from part 2 of task 3. To do this, I began by copying my code from task 2 of the lab. Inside the added plt.plot functions I inserted equations 6 and 7 into my f1(t) function. I also added the original plot for reference. }
+\begin{lstlisting}[language=Python]
+#%% Part 3 Task 3 Code
+
+t = np.arange(-5, 20 + steps, steps) 
+#plot starts at -5 and finishes at 20 on the x-axis
+
+plt.figure(figsize = (10,7))
+plt.plot(t, f1(t),label = 'f1(t)') #plots the original created equation
+plt.plot(t, f1(t/2),label = 'f1(t/2)') #plots original equation with time halved
+plt.plot(t, f1(2*t),label = 'f1(2*t)') #flips plot with time doubled
+plt.legend()
+plt.ylim([-2,10])
+plt.grid()
+plt.ylabel('y(t)')
+plt.xlabel('t')
+plt.title('Part 3 Time Scale Plot')
+\end{lstlisting}
+
+{This is my code for part 3 task 5 of lab 2. In this section of the lab we were tasked with plotting the derivative of the user-defined function we created. To do this, I started by creating two differential equations. Then I created a plt.plot function that would plot my original graph as a dotted line. Then, I created another plt.plot function that would portray the derivative plot.  }
+\begin{lstlisting}[language=Python]
+#%% Part 3 Task 5 Code
+
+t = np.arange(-5, 10 + steps, steps) 
+#plot starts at -5 and finishes at 10 on the x-axis
+dt = np.diff(t)
+dy = np.diff(f1(t))/dt
+
+plt.figure(figsize = (10,7))
+plt.plot(t, f1(t),'--', label = "f1(t)") #plots the f1(t) equation with a dotted line
+plt.plot(t[range(len(dy))], dy, label ='f1(t)/dt') 
+#plots the derivative of the f1(t) equation
+plt.legend()
+plt.ylim([-2,10])
+plt.grid()
+plt.ylabel('y(t)')
+plt.xlabel('t')
+plt.title('Part 3 Derivative Plot')
+
+\end{lstlisting}
+
+\section{Results}
+
+The results for this lab are shown below as plots. I have given each plot a title, a x-axis title, and a y-axis title. Each plot corresponds with one of the seven equations shown in the Equations section of this lab report. The lab did work as I expected it to. I did not get any odd graphs from my code, and my TA confirmed that. 
+
+\begin{figure}
+\includegraphics[width=\linewidth]{Part1Plot.png}
+\caption{Cosine Function}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=\linewidth]{Part2Plot.png}
+\caption{User-Defined Function}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=\linewidth]{Part2RampPlot.png}
+\caption{Ramp Function}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=\linewidth]{Part2StepPlot.png}
+\caption{Step Function}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=\linewidth]{Part3Task1Plot.png}
+\caption{Time Reversal Plot}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=\linewidth]{Part3Task2Plot.png}
+\caption{Time Shift}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=\linewidth]{Part3Task3Plot.png}
+\caption{Time Scale}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=\linewidth]{Part3Task4Plot.PNG}
+\caption{Draw.io Derivative Function}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=\linewidth]{Part3Task5Plot.png}
+\caption{Derivative Function}
+\end{figure}
+
+\newpage
+
+\section{Error Analysis}
+
+When working through this lab, I did struggle with creating the user-defined function. Understanding how step and ramp functions plot has been a struggle for me in this class. However, I was able to gain guidance from my roommate, which helped me create the correct user-defined function. My TA was also extremely helpful in explaining how the function would plot. This helped me gain more insight on my user-defined function, as well as, more insight on how step and ramp functions plot. 
+
+
+
+\section{Questions}
+
+\textbf{1. Are the plots from Part 3 Task 4 and Part 3 Task 5 identical? Is it possible for them to
+match? Explain why or why not.}
+{The plots from Part 3 Task 4 and Task 5 are identical. I believe it is possible for them to match if I was using a website like desmos, but since I used draw.io, I don't think the two graphs are exactly the same. For instance, I think if the Task 4 plot is much larger than the Task 5 plot.}
+
+\textbf{2. How does the correlation between the two plots (from Part 3 Task 4 and Part 3 Task 5)
+change if you were to change the step size within the time variable in Task 5? Explain why
+this happens.}
+{If you were to change the step size within the time variable for task 4 and 5 for Part 3, I believe the resolution would change. This would possibly impact the differential equation. If the resolution changes and we take the derivative of our function, the plot should be different.  }
+
+\textbf{3. Leave any feedback on the clarity of the expectations, instructions, and deliverables.}
+{I think everything was clarified well in the lab 2 document. I did not struggle completing the tasks.}
+
+\newpage
+
+\section{Conclusion}
+
+During this lab, I was able to gain more knowledge about the computer programming language known as python. I have never been good at coding, but python seems to be a lot easier than other programming languages. I also learned more about how to plot step and ramp functions without using python. Overall, I think this lab was a huge success. It provided me with more knowledge on python and step/ramp functions. Also, here is the link to my github: \href{https://github.com/JMac1999}{Click Here}
+
+\newpage
+
+
+\begin{thebibliography}{111}
+
+  \bibitem{ACMT}
+A. Aldroubi, C. Cabrelli, U. Molter, and Sui Tang,
+Dynamical sampling, 
+{\it  Applied and Computational Harmonic Analysis}, doi:10.1016/j.acha.2015.08.014, 2016
+
+
+\end{thebibliography}
+\end{document}
+
+%This template was created by Roza Aceska.
