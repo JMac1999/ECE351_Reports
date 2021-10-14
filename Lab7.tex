@@ -1,0 +1,333 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                              %
+% Jared McDaniel                                               %
+% ECE 351 Section 51                                           %
+% Lab 7                                                        %
+% 10/19/2021                                                   %
+% This file contains the contents of the Lab 7 Report          %
+%                                                              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\documentclass[12pt]{report}
+\usepackage[english]{babel}
+%\usepackage{natbib}
+\usepackage{url}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\graphicspath{{images/}}
+\usepackage{parskip}
+\usepackage{fancyhdr}
+\usepackage{vmargin}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codeblue}{rgb}{0,0,0.95}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{codeblue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codegreen},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+ 
+\lstset{style=mystyle}
+
+\setmarginsrb{3 cm}{2.5 cm}{3 cm}{2.5 cm}{1 cm}{1.5 cm}{1 cm}{1.5 cm}
+
+\title{Lab 7}								
+% Title
+\author{ Jared McDaniel}						
+% Author
+\date{10/19/2021}
+% Date
+
+\makeatletter
+\let\thetitle\@title
+\let\theauthor\@author
+\let\thedate\@date
+\makeatother
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\theauthor}
+\lhead{\thetitle}
+\cfoot{\thepage}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{titlepage}
+	\centering
+    \vspace*{0.5 cm}
+   % \includegraphics[scale = 0.075]{bsulogo.png}\\[1.0 cm]	% University Logo
+\begin{center}    \textsc{\Large   ECE 351 - Section 51 }\\[2.0 cm]	\end{center}% University Name
+	\textsc{\Large Block Diagrams and System Stability  }\\[0.5 cm]				% Course Code
+	\rule{\linewidth}{0.2 mm} \\[0.4 cm]
+	{ \huge \bfseries \thetitle}\\
+	\rule{\linewidth}{0.2 mm} \\[1.5 cm]
+	
+	\begin{minipage}{0.4\textwidth}
+		\begin{flushleft} \large
+		%	\emph{Submitted To:}\\
+		%	Name\\
+          % Affiliation\\
+           %contact info\\
+			\end{flushleft}
+			\end{minipage}~
+			\begin{minipage}{0.4\textwidth}
+            
+			\begin{flushright} \large
+			\emph{Submitted By :} \\
+			Jared McDaniel  
+		\end{flushright}
+           
+	\end{minipage}\\[2 cm]
+	
+%	\includegraphics[scale = 0.5]{PICMathLogo.png}
+    
+    
+    
+    
+	
+\end{titlepage}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\tableofcontents
+\pagebreak
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\thesection}{\arabic{section}}
+\section{Introduction}
+ 
+
+The goal of this lab is to become familiar with Laplace-domain block diagrams and use the factored form of the transfer function to judge system stability.
+
+\section{Equations}
+
+The equations below portray the ones that were used during this lab. Equations 1, 2, and 3 are the  transfer block equations given to us in the lab handout. We calculated the zeros and the poles for these three equations. The values for these equations can be seen in Figure 2 under the Results section of the lab report. Equation 4 is the Open Loop transfer function. The plot for this function can be seen in Figure 1 under the Results section of this lab report. Equation 5 is the Closed Loop transfer function. The plot for this function can be seen in Figure 3, and the poles, zeroes, and gain of this function can be seen in Figure 4.  
+
+\begin{equation}
+    G(s) = \frac{s+9}{s^{3} -2s^{2}-40s-64}
+\end{equation}
+\begin{equation}
+    A(s) = \frac{s+4}{s^{2}+4s+3}
+\end{equation}
+\begin{equation}
+   B(s) = s^{2}+26s+168
+\end{equation}
+\begin{equation}
+  H_{open}(s) = \frac{(s+9)(s+4)}{(s^{3}-2s^{2}-40s-64)(s^{2}+4s+3)}
+\end{equation}
+\begin{equation}
+   H_{closed}(s) = \frac{(s+9)(s+4)}{[(s^{3}-2s^{2}-40s-64)(s^{2}+26s+168)(s+9)](s^{2}+4s+3)}
+\end{equation}
+
+
+
+\section{Methodology}
+
+This is my code for Part 1 of Lab 7. I started this section of code by copying my num and den matrices from lab 6. Then I separated my G(s), A(s), and B(s) equations by putting the numerator values in the num matrix and the denominator values in the den matrix. This section of code was used to factor the first three equations in this lab report.
+\begin{lstlisting}[language=Python]
+#Part 1 Task 1 Code
+
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.signal as sig
+
+#G(s)
+numG = [1, 9] # Creates a matrix for the numerator
+denG = [1 , -2 , -40, -64] # Creates a matrix for the denominator
+
+#A(s)
+numA = [1, 4] # Creates a matrix for the numerator
+denA = [1 , 4 , 3] # Creates a matrix for the denominator
+
+#B(s)
+numB = [1, 26 , 168] # Creates a matrix for the numerator
+denB = [1] # Creates a matrix for the denominator
+
+\end{lstlisting}
+
+{This is my code for Part 1 Task 2 of Lab 7. For this section of code we were tasked with using the sig.tf2zpk() function to find the zeros and poles of the first three equations in this lab report. To do this, I used the sig.tf2zpk() function, and then I used the print command from lab 6 to portray the zeros and poles of each equation. These values can be viewed in Figure 2 under the Results section of this lab report.   }
+\begin{lstlisting}[language=Python]
+#Part 1 Task 2
+zG, pG, kG = sig.tf2zpk(numG, denG) #Using the sig function given in the handout
+zA, pA, kA = sig.tf2zpk(numA, denA) #Using the sig function given in the handout
+zB, pB, kB = sig.tf2zpk(numB, denB) #Using the sig function given in the handout
+
+#I copied the print function from lab 6
+print('ZG = ', zG, '\nPG = ', pG) 
+print('ZA = ', zA, '\nPA = ', pA)
+print('ZB = ', zB, '\nPB = ', pB)
+\end{lstlisting}
+
+
+
+{This is my code for Part 1 Tasks 3, 4, and 5 of Lab 7. For Part 1 Task 3 of this lab, we were tasked with using the sig.convolve() function to print our numerator and denominator for the open loop transfer function. To do this, I used the example code given to us in the lab handout. The numerator and denominator values can be viewed in Figure 5 under the Results section of this lab report. For Part 1 Task 4 of this lab, we were asked if the Open Loop transfer function was stable? The function is not stable because it has positive poles. For Part 1 Task 5 of this lab, we were tasked with plotting the Open Loop transfer function. To do this, I used the sig.step() function and the plotting commands for python. The plot can be viewed in Figure 1 under the Results section of this lab report. }
+\begin{lstlisting}[language=Python]
+#Part 1 Open Loop Code
+#from example code given in the lab handout
+numOL = sig.convolve(numG, numA)
+denOL = sig.convolve(denG, denA)
+print ('Numerator = ', numOL)
+print ('Denominator = ', denOL)
+
+#Part 1 Task 4 Answer
+#The open loop response is not stable. It is not stable because we have poles
+#on the right side of the x and y plane
+
+#Part 1 Task 5
+
+tout, yout = sig.step((numOL ,denOL)) #copied from lab 6 code
+
+plt.figure(figsize = (10,7))
+plt.plot(tout, yout)
+plt.grid()
+plt.ylabel('yout')
+plt.xlabel('tout')
+plt.title('Step Response of the Open-Loop Transfer Function')
+
+#Task 5 results do support my answer from task 4 because we have poles on
+#the right side of the x and y plane
+\end{lstlisting}
+
+
+{This is my code for Part 2 Tasks 1, 2, and 3 of Lab 7. In this part of the lab we were tasked with  finding the Closed Loop transfer function, and the zeros, poles, and gain of that function. To do this I used the sig.convolve() function, the sig.tf2zpk() function, and the print command to portray the zeros, poles, and gain of our Closed Loop transfer function. The values that we found for the Closed Loop transfer function can be seen in Figure 4 under the Results section of this lab report. Finally, we were asked if this function was stable? The function is stable because all the poles are on the negative side.}
+\begin{lstlisting}[language=Python]
+#Part 2 Task 1 & 2 Code
+
+numCL = sig.convolve(numG, numA)
+denCL = sig.convolve(denG + sig.convolve(numB, numG), denA)
+
+zCL, pCL, kCL = sig.tf2zpk(numCL, denCL) #Using the sig function given in the handout
+
+print('Closed Loop Zeros =', zCL, '\nClosed loop Poles =', pCL, 
+      '\nClosed Loop Gain =', kCL)
+
+#Part 2 Task 3 Answer
+#The closed loop responses is stable. We do not have any poles on the positive side.
+\end{lstlisting}
+
+
+{This is my code for Part 2 Task 4 and 5 of Lab 7. In this part of the lab we were tasked with plotting the Closed Loop transfer function. To do this I used the sig.step() function along with my calculated numerator and denominator for the Closed Loop transfer function. Then I used the plotting commands in python to obtain my plot. The plot for the Closed Loop transfer function can be viewed in Figure 3 under the Results section of this lab report.  }
+\begin{lstlisting}[language=Python]
+#Part 2 Task 4
+tout, yout = sig.step((numCL ,denCL)) #copied from lab 6 code
+
+plt.figure(figsize = (10,7))
+plt.plot(tout, yout)
+plt.grid()
+plt.ylabel('yout')
+plt.xlabel('tout')
+plt.title('Step Response of the Closed-Loop Transfer Function')
+
+#Task 4 results do support my answer from task 3, because we don't have poles
+#on the right side of the x and y plane
+
+\end{lstlisting}
+
+
+
+
+\section{Results}
+
+The results for this lab are shown below as plots. Figure 1 portrays the plot of the Open Loop transfer function. Figure 2 portrays the printed zeros and poles of the equations G(s), A(s), and B(s) given to us in the lab handout. Figure 3 portrays the Closed Loop transfer function. Figure 4 contains the printed values of the zeros, poles, and gain of the Closed Loop transfer function. Figure 5 portrays the numerator and denominator values of the Open Loop transfer function.
+
+
+\begin{figure}
+\includegraphics[width=\linewidth]{Part1Plot.png}
+\caption{Open Loop Transfer Function Plot}
+\end{figure}
+
+
+
+\begin{figure}
+\includegraphics[width=\linewidth]{Part1Task2Values.PNG}
+\caption{Transfer Block Equations Zeros and Poles }
+\end{figure}
+\newpage
+\begin{figure}
+\includegraphics[width=\linewidth]{Part2Plot.png}
+\caption{Closed Loop Transfer Function Plot}
+\end{figure}
+\newpage
+\begin{figure}
+\includegraphics[width=\linewidth]{Part2ClosedLoop.PNG}
+\caption{Closed Loop Zeros, Poles, and Gain}
+\end{figure}
+\newpage
+\begin{figure}
+\includegraphics[width=\linewidth]{Part1OpenLoop.PNG}
+\caption{Open Loop Numerator and Denominator}
+\end{figure}
+
+
+
+
+\section{Error Analysis}
+
+When working through this lab, I did not experience any difficulty. I thought the lab provided clear explanations and example code that helped me complete this lab without any issues. 
+
+\newpage
+
+\section{Questions}
+
+\textbf{1. In Part 1 Task 5, why does convolving the factored terms using scipy.signal.convolve()
+result in the expanded form of the numerator and denominator? Would this work with your
+user-defined convolution function from Lab 3? Why or why not?}
+{Convolving two Laplace functions is the same as multiplying them. This would result in the expanded form of the numerator and the denominator. This would not have worked in lab 3, because we were working in the time domain. }
+
+\textbf{2. Discuss the difference between the open- and closed-loop systems from Part 1 and Part 2.
+How does stability differ for each case, and why?}
+{The open-loop system only used the G(s) and A(s) equations, while the closed-loop system used G(s), A(s), and B(s). The stability for the open-loop system was not stable, while the closed-loop system was stable. This is shown in the plots, but the open-loop system had a positive pole (unstable) while the closed-loop system did not have any (stable).  }
+
+\textbf{3. What is the difference between scipy.signal.residue() used in Lab 6 and
+scipy.signal.tf2zpk() used in this lab?}
+{The sig.residue() function was used to expand and solve Laplace transforms, while the sig.tf2zpk() function was used to find the poles and zeros of Lapalce transforms. }
+
+\textbf{4. Is it possible for an open-loop system to be stable? What about for a closed-loop system to be unstable? Explain how or how not for each}
+{It is possible for an open-loop system to be stable, and it is possible for a closed-loop system to be unstable. Stability depends on the poles of each system. If the open-loop system has all negative poles, it will be stable. If the closed-loop system has a positive pole, it will be unstable. }
+
+\textbf{5. Leave any feedback on the clarity of the expectations, instructions, and deliverables.}
+{I think everything was clarified well in the Lab 7 document. I did not struggle with any of the expectations or instructions given in this lab. I thought the lab was easy to follow and complete.}
+
+
+
+\section{Conclusion}
+
+During this lab, I became more familiar with Laplace-domain block diagrams, and I became better at factoring transfer functions to test system stability. I felt that the lab was successful in its goal of furthering our understanding of transfer function factoring and block diagrams. I don't have any recommendations to change this lab. I thought the lab provided all the necessary information for us to complete it. Here is the link to my github: \href{https://github.com/JMac1999}{Click Here}
+
+\newpage
+
+
+\begin{thebibliography}{111}
+
+  \bibitem{ACMT}
+A. Aldroubi, C. Cabrelli, U. Molter, and Sui Tang,
+Dynamical sampling, 
+{\it  Applied and Computational Harmonic Analysis}, doi:10.1016/j.acha.2015.08.014, 2016
+
+
+\end{thebibliography}
+\end{document}
+
