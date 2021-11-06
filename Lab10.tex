@@ -1,0 +1,310 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                              %
+% Jared McDaniel                                               %
+% ECE 351 Section 51                                           %
+% Lab 10                                                       %
+% 11/9/2021                                                    %
+% This file contains the contents of the Lab 10 Report         %
+%                                                              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\documentclass[12pt]{report}
+\usepackage[english]{babel}
+%\usepackage{natbib}
+\usepackage{url}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\graphicspath{{images/}}
+\usepackage{parskip}
+\usepackage{fancyhdr}
+\usepackage{vmargin}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codeblue}{rgb}{0,0,0.95}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{codeblue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codegreen},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+ 
+\lstset{style=mystyle}
+
+\setmarginsrb{3 cm}{2.5 cm}{3 cm}{2.5 cm}{1 cm}{1.5 cm}{1 cm}{1.5 cm}
+
+\title{Lab 10}								
+% Title
+\author{ Jared McDaniel}						
+% Author
+\date{11/9/2021}
+% Date
+
+\makeatletter
+\let\thetitle\@title
+\let\theauthor\@author
+\let\thedate\@date
+\makeatother
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\theauthor}
+\lhead{\thetitle}
+\cfoot{\thepage}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{titlepage}
+	\centering
+    \vspace*{0.5 cm}
+   % \includegraphics[scale = 0.075]{bsulogo.png}\\[1.0 cm]	% University Logo
+\begin{center}    \textsc{\Large   ECE 351 - Section 51 }\\[2.0 cm]	\end{center}% University Name
+	\textsc{\Large Frequency Response  }\\[0.5 cm]				% Course Code
+	\rule{\linewidth}{0.2 mm} \\[0.4 cm]
+	{ \huge \bfseries \thetitle}\\
+	\rule{\linewidth}{0.2 mm} \\[1.5 cm]
+	
+	\begin{minipage}{0.4\textwidth}
+		\begin{flushleft} \large
+		%	\emph{Submitted To:}\\
+		%	Name\\
+          % Affiliation\\
+           %contact info\\
+			\end{flushleft}
+			\end{minipage}~
+			\begin{minipage}{0.4\textwidth}
+            
+			\begin{flushright} \large
+			\emph{Submitted By :} \\
+			Jared McDaniel  
+		\end{flushright}
+           
+	\end{minipage}\\[2 cm]
+	
+%	\includegraphics[scale = 0.5]{PICMathLogo.png}
+    
+    
+    
+    
+	
+\end{titlepage}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\tableofcontents
+\pagebreak
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\thesection}{\arabic{section}}
+\section{Introduction}
+ 
+
+The goal of this lab is to become familiar with response tools and Bode plots using Python. 
+
+
+   
+
+\section{Equations}
+{The equations below portray the ones that were used in the lab. Equation 1 is the transfer function we found in the prelab. Equation 2 defines the magnitude of our transfer function. Equation 3 defines the phase angle equation of our transfer function. Figures 1, 2, and 3 under the Results section of this lab report portray the Bode plots of our transfer function. Equation 4 is the input signal given to us in Part 2 of this lab. Figure 4 under the Results section of this lab report portrays the output of this equation.} 
+ 
+\begin{equation}
+    H(s) = \frac{\frac{1}{RC}s}{s^{2}+\frac{1}{RC}s+\frac{1}{LC}}
+\end{equation}
+\begin{equation}
+    |H(\omega)| = \frac{\sqrt{(10000j\omega)}^{2}}{\sqrt{(3.704e8-\omega^{2})}^{2}+\sqrt{(10000j\omega)}^{2}}
+\end{equation}
+\begin{equation}
+    \angle H(\omega) = \arctan \frac{10000\omega}{1}-\arctan \frac{10000\omega}{3.704e8-\omega^{2}}
+\end{equation}
+\begin{equation}
+    x(t) = \cos({2\pi \cdot 100t}) + \cos({2\pi \cdot 3024t}) + \sin({2\pi \cdot 50000t})
+\end{equation}
+
+\section{Methodology}
+
+This is my code for Part 1 Task 1 of lab 10. I started this section of code by defining my known values, the numerator and denominator of the transfer function, my equation for magnitude of H(s), and my equation for the phase angle of H(s). We found the H(s) equations in the prelab. I had to convert my phase angle equation to radians, so I multiplied the returned value by 180/pi. Then I used the plotting code we have been using this whole semester to create my Bode plot. In this case, I had to use plt.semilogx instead of plt.plot. Figure 1 under the Results section of this lab report portrays the Bode plot for this code. 
+\begin{lstlisting}[language=Python]
+#Part 1 Task 1
+
+R = 1000
+L = 27e-3
+C = 100e-9
+#R, L, C values of our RLC circuit
+
+num = [1/(R*C), 0] #numerator of the transfer function
+den = [1, 1/(R*C), 1/(L*C)] #denominator of the transfer function
+
+def magH(w):
+    H = (w/(R*C))/(np.sqrt((w**4)+((((1/(R*C))**2)-(2/(L*C)))*w**2)+(1/(L*C))**2))
+    return H
+#Equation for |H(jw)| from the prelab
+
+def angH(w):
+    ang = (np.pi/2)-np.arctan((w/(R*C))/((-w**2)+(1/(L*C))))
+    for i in range(len(w)):
+        if ang[i] > np.pi/2:
+            ang[i] = (ang[i]-np.pi)
+    return ang*180/np.pi
+
+plt.figure(figsize=(10,7))
+plt.subplot(2,1,1)
+plt.semilogx(w, 20*np.log10(magH(w)))
+plt.grid()
+plt.title("Task 1 Bode Plot")
+plt.ylabel("Magnitude")
+
+plt.subplot(2,1,2)
+plt.semilogx(w, angH(w))
+plt.grid()
+plt.xlabel("Omega")
+plt.ylabel("Phase")       
+
+\end{lstlisting}
+
+{This is my code for Part 1 Task 2, and 3 of Lab 10. For the Part 1 Task 2 code, we were tasked with using the scipy.signal.bode() command to plot the magnitude and phase angle of our transfer function. Then I copied the plotting code from Task 1 of this lab, and created the bode plot. Figure 2 under the Results section of this lab report corresponds with this code, and it matches the plot I obtained for the first task of this lab. For the Part 1 Task 2 code, were given example code in the lab handout. I copied it into python and ran it. I also redefined my numerator and denominator values as arrays. Figure 3 under the Results section of this lab report corresponds with this code. }
+\begin{lstlisting}[language=Python]
+#Part 1 Task 2
+
+_,mag, angle = sig.bode((num,den),w)
+
+plt.figure(figsize=(10,7))
+plt.subplot(2,1,1)
+plt.semilogx(w, mag)
+plt.grid()
+plt.title("Task 2 Bode Plot")
+plt.ylabel("Magnitude")
+
+plt.subplot(2,1,2)
+plt.semilogx(w, angle)
+plt.grid()
+plt.xlabel("Omega")
+plt.ylabel("Phase") 
+
+#Part 1 Task 3
+plt.figure(figsize=(10,7))
+
+num = np.array ([1/(R*C), 0]) #numerator of the transfer function
+den = np.array ([1, 1/(R*C), 1/(L*C)]) #denominator of the transfer function
+
+sys = con.TransferFunction(num,den)
+_ = con.bode(sys, w, dB = True, Hz = True, deg = True, plot = True) 
+\end{lstlisting}
+
+{This is my code for Part 2 of Lab 10. For this section of code we were tasked with plotting the given signal from 0 to 0.01 seconds. To do this, I started by defining a high enough sampling frequency to capture all three frequencies and the step size of 1/fs. Then I copied the plotting code from the first two tasks of this lab. In between the plotting code, I used the commands sig.bilinear() and sig.lfilter(). Sig.bilinear() converts our transfer function to its z-domain equivalent, in order for the input signal to pass through the RLC circuit. Sig.lfilter() passes the input signal through the filter. Figure 4 under the results section of this lab report corresponds with this code. }
+\begin{lstlisting}[language=Python]
+#Part 2
+fs = 2*np.pi*50000
+steps = 1/fs
+t=np.arange(0, 0.01+steps, steps)
+
+def x(t):
+    return np.cos(2*np.pi*100*t) + np.cos(2*np.pi*3024*t) + np.cos(2*np.pi*50000*t)
+
+plt.figure(figsize=(10,7))
+plt.subplot(2,1,1)
+plt.plot(t, x(t))
+plt.grid()
+plt.title("Part 2 Plot")
+plt.ylabel("y(t)")
+
+zeq, peq = sig.bilinear(num, den, fs)
+y = sig.lfilter(zeq, peq, x(t))
+
+plt.subplot(2,1,2)
+plt.plot(t, y)
+plt.grid()
+plt.xlabel("Time")
+plt.ylabel("filter signal") 
+\end{lstlisting}
+
+
+
+\section{Results}
+
+The results for this lab are shown below as plots. Each Figure holds 2 plots. For Figures 1, 2, and 3 the top plot is the magnitude of our transfer function, and the bottom plot shows the phase angle of the transfer function. For Figure 4, the top plot is the output of our given signal, and the bottom plot is the filter signal with respect to time. Figures 1, 2, and 3 show the magnitude and phase angle (bode plots) of our calculated transfer function form Part 1 of this lab. The first three plots all look identical. Figure 4 shows the output of our given signal and the filter signal from Part 2 of this lab.
+
+
+\begin{figure}
+\includegraphics[width=\linewidth]{Task1Bode.png}
+\caption{H(s) Magnitude and Phase Plots}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=\linewidth]{Task2Bode.png}
+\caption{Sig.Bode Magnitude and Phase Plots}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=\linewidth]{Task3Bode.png}
+\caption{Frequency Response Plot}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=\linewidth]{Part2Plot.png}
+\caption{y(t) Output Signal}
+\end{figure}
+
+\newpage
+
+\section{Error Analysis}
+
+When working through this lab, I did experience difficulty with my third figure. The bottom plot of Figure 3 portrayed an odd range of phase angle values. The values started at -270 degrees and went down to -450 degrees. This equates to 90 degrees and -90 degrees, which is what we wanted to obtain. To solve this issue, our lab TA ran my code on her laptop and found that it portrayed a y range of 90 to -90 degrees. She concluded that another Spyder library had been updated from the previous version. Other than that one issue, I thought the lab provided clear explanations that helped me complete it without any issues. 
+
+
+
+\section{Questions}
+
+\textbf{1. Explain how the filter and filtered output in Part 2 makes sense given the Bode plots from Part 1. Discuss how the filter modifies specific frequency bands, in Hz.}
+{The filter and the filtered output in Part 2 makes sense because the provided frequencies at 3024 Hz and 100 Hz should be filtered out. If those two are filtered out, the only frequency left would be the 50,000 Hz signal. A filter modifies frequency bands by attenuating or amplifying them. }
+
+\textbf{2. Discuss the purpose and working of sig.bliniear() and sig.lfilter().}
+{Sig.bilinear() converts our transfer function into its z-domain equivalent. Sig.lfilter() passes the input signal through the filter. These two commands work well together because sig.lfilter needs an input signal in its z-domain equivalent to compute the filter calculations.}
+
+\textbf{3. What happens if you use a different sampling frequency in sig.bilinear() than you used for the time-domain signal?.}
+{If we used a different sampling frequency in sig.bilinear, our resolution would either increase or decrease . We use the resolution to plot our signals, and if it is too high or too low, the plots become useless. We need to have a good resolution in order to obtain proper plots.}
+
+
+\textbf{4. Leave any feedback on the clarity of the expectations, instructions, and deliverables.}
+{I think everything was clarified well in the Lab 10 document. I thought the example code was useful in plotting the frequency response, and I thought the lab was easy to follow and complete.}
+
+\newpage
+
+\section{Conclusion}
+
+During this lab, I became more familiar with Bode plots and the frequency response tools in python. I felt that the lab was successful in its goal of furthering our understanding of using bode plots, and it clarified an in-class topics for me (how to find the magnitude and phase angle of the transfer function). I don't have any recommendations to change this lab. I thought the lab provided all the necessary information for us to complete it. Here is the link to my github: \href{https://github.com/JMac1999}{Click Here}
+
+\newpage
+
+
+\begin{thebibliography}{111}
+
+  \bibitem{ACMT}
+A. Aldroubi, C. Cabrelli, U. Molter, and Sui Tang,
+Dynamical sampling, 
+{\it  Applied and Computational Harmonic Analysis}, doi:10.1016/j.acha.2015.08.014, 2016
+
+
+\end{thebibliography}
+\end{document}
+
